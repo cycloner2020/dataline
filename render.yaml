@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   backend:
-    image: ramiawar/dataline:latest  # Use your specified Docker image
+    image: dataline
     ports:
       - "7377:7377"
     environment:
@@ -18,9 +18,3 @@ services:
     networks:
       - dataline
 
-networks:
-  dataline:
-    driver: bridge
-
-volumes:
-  dataline_dev:
