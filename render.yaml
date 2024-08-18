@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  backend:
+    image: ramiawar/dataline:latest  # Use your specified Docker image
+    ports:
+      - "7377:7377"
+    environment:
+      ALLOWED_ORIGINS: "${ALLOWED_ORIGINS:-http://localhost:7377,http://0.0.0.0:7377,http://localhost:5173,http://127.0.0.1:5173}"
+      AUTH_USERNAME: "${AUTH_USERNAME}"
+      AUTH_PASSWORD: "${AUTH_PASSWORD}"
+    working_dir: /home/dataline/backend
+    command: bash -c "python -m alembic upgrade head && python -m uvicorn dataline.main:app --port=7377 --host=0.0.0.0 --reload"
+    volumes:
+      - dataline_dev:/home/.dataline  # Persist local SQLite DB
+      - ./backend/dataline:/home/dataline/backend/dataline
+      - ./backend/alembic:/home/dataline/backend/alembic
+    networks:
+      - dataline
+
+networks:
+  dataline:
+    driver: bridge
+
+volumes:
+  dataline_dev:
